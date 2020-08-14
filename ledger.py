@@ -22,20 +22,18 @@ import os
 # outputting to the ledger in a json format
 
 class Account:
-    def __init___(self, json_dict=None, ledger=[], name="", total_amount=0, periodicEntries=[]):
+    def __init__(self, json_dict=None, ledger=[], name="", total_amount=0, periodicEntries=[]):
         if json_dict is not None:
-            self.ledger = json_dict['ledger']
-            self.name = json_dict['name']
-            self.total_amount = json_dict['total_amount']
-            self.periodic_entries = json_dict['periodic_entries']
+           self.ledger = json_dict['ledger']
+           self.name = json_dict['name']
+           self.total_amount = json_dict['total_amount']
+           self.periodic_entries = json_dict['periodic_entries']
         else:
             self.ledger = []
             self.name = ""
             self.total_amount = 0
             self.periodic_entries = []
 
-        print("test")
-        print (str(self.total_amount))
 
 class ledger_list:
 

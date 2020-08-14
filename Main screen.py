@@ -4,7 +4,6 @@ from PIL import ImageTk, Image
 import datetime
 import tkinter.font as tkfont
 
-
 # def callback():
 #   print ("called the callback!")
 
@@ -23,12 +22,13 @@ import tkinter.font as tkfont
 
 def greenRed(amount):
     # add gradient for amount over 0 later
-    redGreen = amount > 0
+    redGreen = int(amount) > 0
+
     if redGreen:
-        greenRed = " #95f134 "
+        greenRed = "green3"
     else:
-        greenRed = " #f3612a "
-    return redGreen
+        greenRed = "red2"
+    return greenRed
 
 
 # get ledger file from user input
@@ -36,8 +36,7 @@ def greenRed(amount):
 
 mainLedger = Account()
 
-print(mainLedger.total_amount)
-
+print (mainLedger.total_amount)
 root = Tk()
 
 # displays the title image
@@ -50,9 +49,9 @@ summaryBckd = greenRed(str(mainLedger.total_amount))
 budgetSummaryFrame = Frame(root, background=summaryBckd, borderwidth=1).grid(row=1, column=0)
 
 remainingBalance = Label(budgetSummaryFrame \
-                         , text="Remaining free cash = " + mainLedger.totalAmount \
-                         , bg=greenRed(mainLedger.totalAmount)
-                         , font=tkfont.font(family="Helvetiva", size=36, weight=" normal", slant=" roman"))
+                         , text="Remaining free cash = " + str(mainLedger.total_amount) \
+                         , bg=greenRed(mainLedger.total_amount)
+                         , font=tkfont.Font(family="Helvetiva", size=36, weight="normal", slant="roman"))
 
 # displays the top of the ledger in a labelframe
 # upcoming periodic expenses
