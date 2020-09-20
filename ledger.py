@@ -4,6 +4,7 @@
 
 import json
 import os
+from datetime import date
 
 
 # creates ledger_entry class with a contsructor that includes the relevant information
@@ -29,10 +30,21 @@ class Account:
            self.total_amount = json_dict['total_amount']
            self.periodic_entries = json_dict['periodic_entries']
         else:
-            self.ledger = []
-            self.name = ""
-            self.total_amount = 0
-            self.periodic_entries = []
+            self.ledger = ledger
+            self.name = name
+            self.total_amount = total_amount
+            self.periodic_entries = periodicEntries
+
+    def printOut(self):
+        printedLedger = [entry.printOut for entry in self.ledger]
+        print(printedLedger)
+        printed = {
+            "ledger": printedLedger,
+            "name" : self.name,
+            "total_amount": self.total_amount,
+            "periodic entries": self.periodic_entries
+        }
+        return printed
 
 
 class ledger_list:
@@ -43,10 +55,10 @@ class ledger_list:
 
 
 class ledger_entry:
-    def __init__(self, ledger, json=None, number=0, name=None, description=None \
-                 , category=None, debit_credit=None, notes=None, entry_date=None, last_update_date=None):
+    def __init__(self,Account = None, json=None, number=0, name=None, description=None \
+                 , category=None, debit_credit = None, notes=None, entry_date=None, last_update_date=None):
         if (json is not None):
-            self.ledger = json['ledger']
+            self.Account = json['Account']
             self.number = json["number"]
             self.name = json["name"]
             self.description = json["description"]
@@ -57,24 +69,29 @@ class ledger_entry:
             self.last_update_date = json["last_update_date"]
 
         else:
-            self.ledger = ledger
-            self.number = number
+            self.Account = Account
+            self.number = str(len(Account.ledger))
             self.name = name
             self.description = description
             self.category = category
             self.debit_credit = debit_credit
             self.notes = notes
-            self.date = entry_date
-            self.update_date = last_update_date
+            self.entry_date = entry_date
+            self.last_update_date = last_update_date
+
+            cash_Update(Account,debit_credit)
+            #num = str(len(Account.ledger))
+            Account.ledger.append(self)
 
     def printOut(self):
+
         printed = {
-            "ledger": self.leger,
+            "ledger": self.Account.name,
             "number": self.number,
             "name": self.name,
             "description": self.description,
             "category": self.category,
-            "debit_credit": self.debit_credit,
+            "debit_credit" : self.debit_credit,
             "notes": self.notes,
             "entry_date": self.entry_date,
             "last_update_date": self.last_update_date
@@ -83,35 +100,55 @@ class ledger_entry:
         return printed
 
 
-def new_ledger_entry(account, entry):
+def openAccount(filename):
+    with open(filename, 'w+') as ledgerFile:
+        if os.stat(filename + ".txt").st_size > 0:
+            data = json.load(ledgerFile)
+        else:
+            data = ''
+    ledger = data
+
+def closeAccount(Account):
+    printedAccount = Account.printOut()
+    with open(Account.name + ".txt", 'w') as fileout:
+        storedData = json.dumps((printedAccount))
+        json.dump(storedData, fileout)
+
+
+#not needed? Will see if entries can be added by using self within the init class for ledger entry
+#def add_ledger_entry(account, entry):
     # adds a new ledger entry, sets the number of the ledger entry after the number of the last entry in ledger
-    num = str(len(account.ledger))
-    account.ledger.update(num, entry)
+
 
 
 def cash_Update(account, amount):
-    account.total_amount = amount
+    #should be called whenever a ledger entry is added
+    account.total_amount = account.total_amount + amount
 
 
 def add_periodical(ledger, entry):
     ledger['periodic entries'].update(str(len(ledger['periodic entries'])), entry)
 
 
+def reorderPeriodicEntries(ledger):
+    periodic = ledger["periodic entries"]
+
+
+
+def testSuite():
+#Creates a new ledger, initializes it with a JSON named 'testledger', tests all methods in the class
+    testLedger = Account(None, [], str("testLedger"),567,[])
+    entry1 = ledger_entry(testLedger, None,None,"testAdd",None,None,64.5,None,str(date.today()),None)
+    entry2 = ledger_entry(testLedger, None,None,"testAdd2", None, None,-55.30,None,str(date.today()),None)
+    #print(entry1.printOut())
+    #print(testLedger.printOut())
+    #print(testLedger.printOut())
+    closeAccount(testLedger)
+
+testSuite()
 ledger = {}
 ledger['entries'] = []
 ledger["index"] = 0
 ledger['remaining budget'] = 0
 ledger['periodic entries'] = []
 
-
-
-with open('fileledger.txt', 'w+') as ledgerFile:
-    if os.stat('fileledger.txt').st_size > 0:
-        data = json.load(ledgerFile)
-    else:
-        data = ''
-ledger = data
-
-with open('ledger.txt.', 'w') as fileout:
-    storedData = json.dumps((ledger))
-    json.dump(storedData, fileout)
