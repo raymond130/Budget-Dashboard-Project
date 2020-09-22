@@ -1,0 +1,8 @@
+1. create test suite for ledger
+	-tests opening from file
+	-test set/reset/get
+	-tests serialization/file IO
+2. fix upcoming expenses functionality
+3. adjust colors on remaining free cash to be less grating
+4. add styling/padding to all frames.
+
