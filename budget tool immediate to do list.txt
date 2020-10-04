@@ -1,8 +1,9 @@
 1. Fully implement ledger file functionality within the gui screen
-
+  -complete load_ledger to make it the miain object within the root instane, remove placeholder test ledgers.
   -load_ledger needs to check if a ledger is currently open and save it if so before it loads a new ledger
   -autosave needs to be implemented
   -implement add_expense and add_periodic_expense buttons
+  -add test module to root screen
 2. fix upcoming expenses functionality to correctly sort and pull from periodic expenses ledger data
 3. adjust colors on remaining free cash to be more natural (adjust font too?)
 4. add styling/padding to all frames.
